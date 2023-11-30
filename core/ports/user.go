@@ -19,9 +19,9 @@ type UserRepository interface {
 }
 
 type UserService interface {
-	Create(ctx context.Context, user models.UserReq) error
+	Create(ctx context.Context, user *models.UserReq) error
 	ReadAll(ctx context.Context) ([]models.UserRes, error)
-	Read(ctx context.Context, ID string) (models.UserRes, error)
-	Update(ctx context.Context, ID string, user models.UserReq) (models.UserRes, error)
+	Read(ctx context.Context, ID string) (*models.UserRes, error)
+	Update(ctx context.Context, ID string, user *models.UserReq) (*models.UserRes, error)
 	Delete(ctx context.Context, ID string) error
 }
