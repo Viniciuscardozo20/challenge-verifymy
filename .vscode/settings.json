@@ -1,0 +1,8 @@
+{
+  "go.lintTool": "golangci-lint",
+  "go.lintFlags": [
+    "--new=true",
+    "--config=${workspaceFolder}/.golangci.yml",
+    "--fast"
+  ]
+}
