@@ -1,10 +1,13 @@
 package ports
 
-import "context"
+import (
+	"challenge-verifymy/core/models"
+	"context"
+)
 
-type Client interface {
-	Close(context.Context) error
-	GetRepository(name string) (UserRepository, error)
+type Database interface {
+	Disconnected() <-chan struct{}
+	GetRepository(name string) UserRepository
 }
 
 type UserRepository interface {
@@ -13,4 +16,12 @@ type UserRepository interface {
 	Update(ctx context.Context, id string, data any) (any, error)
 	Read(ctx context.Context, id string) (any, error)
 	ReadAll(ctx context.Context) (any, error)
+}
+
+type UserService interface {
+	Create(ctx context.Context, user models.UserReq) error
+	ReadAll(ctx context.Context) ([]models.UserRes, error)
+	Read(ctx context.Context, ID string) (models.UserRes, error)
+	Update(ctx context.Context, ID string, user models.UserReq) (models.UserRes, error)
+	Delete(ctx context.Context, ID string) error
 }

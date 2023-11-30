@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"challenge-verifymy/core/ports"
+	"challenge-verifymy/customerr"
 	"context"
 	"errors"
 	"time"
@@ -37,7 +38,7 @@ func (c *Client) disconnect(ctx context.Context) {
 	defer cancel()
 
 	if err := c.client.Disconnect(ctx); err != nil {
-		log.Error(errors.Join(err, ErrFailedToDisconnect))
+		log.Error(errors.Join(err, customerr.ErrFailedToDisconnect))
 	}
 
 	close(c.disconnected)
@@ -60,14 +61,14 @@ func New(ctx context.Context, uri, database string) (*Client, error) {
 		ApplyURI(uri),
 	)
 	if err != nil {
-		return nil, errors.Join(err, ErrFailedToConnect)
+		return nil, errors.Join(err, customerr.ErrFailedToConnect)
 	}
 
 	pingCtx, pingStop := context.WithTimeout(ctx, pingTimeout)
 	defer pingStop()
 
 	if err = mongoClient.Ping(pingCtx, readpref.Primary()); err != nil {
-		return nil, errors.Join(err, ErrFailedToPing)
+		return nil, errors.Join(err, customerr.ErrFailedToPing)
 	}
 
 	client := &Client{

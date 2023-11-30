@@ -1,6 +1,7 @@
 package mongodb
 
 import (
+	"challenge-verifymy/customerr"
 	"context"
 	"errors"
 
@@ -19,7 +20,7 @@ type Repository struct {
 func (r *Repository) Save(ctx context.Context, data any) error {
 	_, err := r.coll.InsertOne(ctx, data)
 	if err != nil {
-		return errors.Join(err, ErrFailedToInsertDocument)
+		return errors.Join(err, customerr.ErrFailedToInsertDocument)
 	}
 
 	return nil
@@ -37,14 +38,14 @@ func (r *Repository) Read(ctx context.Context, id string) (any, error) {
 	found := r.coll.FindOne(ctx, filter)
 	if found.Err() != nil {
 		if errors.Is(found.Err(), mongo.ErrNoDocuments) {
-			return nil, ErrNoResult
+			return nil, customerr.ErrNoResult
 		}
 
-		return nil, errors.Join(found.Err(), ErrFailedToFindDocument)
+		return nil, errors.Join(found.Err(), customerr.ErrFailedToFindDocument)
 	}
 
 	if err := found.Decode(&result); err != nil {
-		return nil, errors.Join(err, ErrFailedToUnmarshalDocument)
+		return nil, errors.Join(err, customerr.ErrFailedToUnmarshalDocument)
 	}
 
 	return result, nil
@@ -59,20 +60,20 @@ func (r *Repository) ReadAll(ctx context.Context) (any, error) {
 	cursor, err := r.coll.Find(ctx, bson.D{}, findOptions)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			return nil, ErrNoResult
+			return nil, customerr.ErrNoResult
 		}
 
-		return nil, errors.Join(err, ErrFailedToFindDocument)
+		return nil, errors.Join(err, customerr.ErrFailedToFindDocument)
 	}
 
 	if err = cursor.All(ctx, results); err != nil {
-		return nil, errors.Join(err, ErrFailedToUnmarshalDocument)
+		return nil, errors.Join(err, customerr.ErrFailedToUnmarshalDocument)
 	}
 
 	return results, nil
 }
 
-// Update changes a single document into the repository.
+// Update changes from a single document into the repository.
 func (r *Repository) Update(ctx context.Context, id string, data any) (any, error) {
 	filter, err := buildFilterByID(id)
 	if err != nil {
