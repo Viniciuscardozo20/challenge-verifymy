@@ -14,11 +14,11 @@ import (
 func TestValidateRequest(t *testing.T) {
 	t.Run("Validate with success", func(t *testing.T) {
 		userReq := &UserReq{
-			Name:         "DummyName",
-			Age:          10,
-			Email:        "dummy@email.com",
-			PasswordHash: "hashed_password",
-			Address:      "dummy-address",
+			Name:     "DummyName",
+			Age:      10,
+			Email:    "dummy@email.com",
+			Password: "hashed_password",
+			Address:  "dummy-address",
 		}
 
 		err := userReq.Validate()
@@ -27,11 +27,11 @@ func TestValidateRequest(t *testing.T) {
 
 	t.Run("Validate with missing field", func(t *testing.T) {
 		userReq := &UserReq{
-			Name:         "",
-			Age:          10,
-			Email:        "dummy@email.com",
-			PasswordHash: "dummy-password",
-			Address:      "dummy-address",
+			Name:     "",
+			Age:      10,
+			Email:    "dummy@email.com",
+			Password: "dummy-password",
+			Address:  "dummy-address",
 		}
 
 		err := userReq.Validate()
@@ -44,11 +44,11 @@ func TestValidateRequest(t *testing.T) {
 
 	t.Run("Validate with wrong field", func(t *testing.T) {
 		userReq := &UserReq{
-			Name:         "DummyName",
-			Age:          10,
-			Email:        "dummemail.com",
-			PasswordHash: "dummy-password",
-			Address:      "dummy-address",
+			Name:     "DummyName",
+			Age:      10,
+			Email:    "dummemail.com",
+			Password: "dummy-password",
+			Address:  "dummy-address",
 		}
 
 		err := userReq.Validate()
@@ -70,11 +70,11 @@ func TestDecodeUserRequest(t *testing.T) {
 
 	t.Run("decode with success", func(t *testing.T) {
 		userReq := &UserReq{
-			Name:         "DummyName",
-			Age:          10,
-			Email:        "dummy@email.com",
-			PasswordHash: "hashed_password",
-			Address:      "dummy-address",
+			Name:     "DummyName",
+			Age:      10,
+			Email:    "dummy@email.com",
+			Password: "hashed_password",
+			Address:  "dummy-address",
 		}
 
 		data, err := json.Marshal(userReq)

@@ -10,12 +10,15 @@ import (
 )
 
 func main() {
-	// TODO Get config
+	config, err := config.LoadConfig("..")
+	if err != nil {
+		log.Fatal("Failed to load environment variables! \n", err.Error())
+	}
 
 	var g multierror.Group
 	ctx, cancel := context.WithCancel(context.Background())
 
-	a, err := api.New(ctx, config.Config{})
+	a, err := api.New(ctx, config)
 	if err != nil {
 		log.Fatal(err)
 	}

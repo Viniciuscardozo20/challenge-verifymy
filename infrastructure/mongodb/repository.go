@@ -27,70 +27,66 @@ func (r *Repository) Save(ctx context.Context, data any) error {
 }
 
 // Read retrieves a single document from the repository based on the given id.
-func (r *Repository) Read(ctx context.Context, id string) (any, error) {
+func (r *Repository) Read(ctx context.Context, id string, output any) error {
 	filter, err := buildFilterByID(id)
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	var result bson.M
 
 	found := r.coll.FindOne(ctx, filter)
 	if found.Err() != nil {
 		if errors.Is(found.Err(), mongo.ErrNoDocuments) {
-			return nil, customerr.ErrNoResult
+			return customerr.ErrNoResult
 		}
 
-		return nil, errors.Join(found.Err(), customerr.ErrFailedToFindDocument)
+		return errors.Join(found.Err(), customerr.ErrFailedToFindDocument)
 	}
 
-	if err := found.Decode(&result); err != nil {
-		return nil, errors.Join(err, customerr.ErrFailedToUnmarshalDocument)
+	if err := found.Decode(&output); err != nil {
+		return errors.Join(err, customerr.ErrFailedToUnmarshalDocument)
 	}
 
-	return result, nil
+	return nil
 }
 
 // ReadAll retrieves a list of documents from the repository based on the given id.
-func (r *Repository) ReadAll(ctx context.Context) (any, error) {
+func (r *Repository) ReadAll(ctx context.Context, output any) error {
 	findOptions := options.Find()
-
-	var results any
 
 	cursor, err := r.coll.Find(ctx, bson.D{}, findOptions)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			return nil, customerr.ErrNoResult
+			return customerr.ErrNoResult
 		}
 
-		return nil, errors.Join(err, customerr.ErrFailedToFindDocument)
+		return errors.Join(err, customerr.ErrFailedToFindDocument)
 	}
 
-	if err = cursor.All(ctx, results); err != nil {
-		return nil, errors.Join(err, customerr.ErrFailedToUnmarshalDocument)
+	if err = cursor.All(ctx, output); err != nil {
+		return errors.Join(err, customerr.ErrFailedToUnmarshalDocument)
 	}
 
-	return results, nil
+	return nil
 }
 
 // Update changes from a single document into the repository.
-func (r *Repository) Update(ctx context.Context, id string, data any) (any, error) {
+func (r *Repository) Update(ctx context.Context, id string, data any) error {
 	filter, err := buildFilterByID(id)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = r.coll.UpdateOne(ctx, filter, bson.M{"$set": data})
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	result, err := r.Read(ctx, id)
+	err = r.Read(ctx, id, data)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return result, nil
+	return nil
 }
 
 // Delete remove a single document into the repository.

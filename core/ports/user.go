@@ -13,9 +13,9 @@ type Database interface {
 type UserRepository interface {
 	Delete(ctx context.Context, id string) error
 	Save(ctx context.Context, data any) error
-	Update(ctx context.Context, id string, data any) (any, error)
-	Read(ctx context.Context, id string) (any, error)
-	ReadAll(ctx context.Context) (any, error)
+	Update(ctx context.Context, id string, data any) error
+	Read(ctx context.Context, id string, output any) error
+	ReadAll(ctx context.Context, output any) error
 }
 
 type UserService interface {

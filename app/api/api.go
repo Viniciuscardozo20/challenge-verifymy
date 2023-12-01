@@ -14,17 +14,18 @@ import (
 )
 
 type Api struct {
-	config  config.Config
-	service ports.UserService
+	config   config.Config
+	service  ports.UserService
+	Shutdown func()
 }
 
 const userRepository = "user"
 
 // New creates a new API
 func New(ctx context.Context, cfg config.Config) (ap *Api, err error) {
-	ap.config = cfg
+	ap = &Api{config: cfg}
 
-	db, err := mongodb.New(ctx, cfg.URI, cfg.DatabaseName)
+	db, err := mongodb.New(ctx, cfg.DBURI, cfg.DBName)
 	if err != nil {
 		return nil, err
 	}
@@ -35,6 +36,12 @@ func New(ctx context.Context, cfg config.Config) (ap *Api, err error) {
 	}
 
 	ap.service = services.NewUserService(userRepo)
+
+	shutdown := func() {
+		<-db.Disconnected()
+	}
+
+	ap.Shutdown = shutdown
 
 	return ap, nil
 }
@@ -50,16 +57,17 @@ func (a *Api) Run(ctx context.Context, cancel context.CancelFunc) func() error {
 
 		userHandler.SetUserRoutes(app)
 
-		log.Printf("Listening on port %s", a.config.Port)
+		log.Printf("Listening on addres and port %s", a.config.Api)
 
-		go shutdown(ctx, app)
+		go a.shutdown(ctx, app)
 
-		return app.Listen(a.config.Port)
+		return app.Listen(a.config.Api)
 	}
 }
 
-func shutdown(ctx context.Context, app *fiber.App) {
+func (a *Api) shutdown(ctx context.Context, app *fiber.App) {
 	<-ctx.Done()
 	log.Printf("Shutting down API gracefully...")
 	app.Shutdown()
+	a.Shutdown()
 }
