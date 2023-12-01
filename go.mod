@@ -5,9 +5,9 @@ go 1.20
 require (
 	github.com/go-playground/validator/v10 v10.16.0
 	github.com/gofiber/fiber/v2 v2.51.0
+	github.com/hashicorp/go-multierror v1.1.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.8.3
-	github.com/viant/toolbox v0.34.5
 	go.mongodb.org/mongo-driver v1.13.0
 )
 
@@ -20,6 +20,7 @@ require (
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/go-cmp v0.5.5 // indirect
 	github.com/google/uuid v1.4.0 // indirect
+	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/klauspost/compress v1.16.7 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
