@@ -101,6 +101,13 @@ func (r *Repository) Delete(ctx context.Context, id string) error {
 	}
 
 	_, err = r.coll.DeleteOne(ctx, filter)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return customerr.ErrNoResult
+		}
+
+		return errors.Join(err, customerr.ErrFailedToFindDocument)
+	}
 
 	return err
 }

@@ -11,10 +11,6 @@ type UserService struct {
 }
 
 func (u *UserService) Create(ctx context.Context, user *models.UserReq) error {
-	if err := user.Validate(); err != nil {
-		return err
-	}
-
 	return u.Create(ctx, user)
 }
 
@@ -31,10 +27,6 @@ func (u *UserService) Delete(ctx context.Context, ID string) error {
 }
 
 func (u *UserService) Update(ctx context.Context, ID string, user *models.UserReq) (*models.UserRes, error) {
-	if err := user.Validate(); err != nil {
-		return nil, err
-	}
-
 	return u.Update(ctx, ID, user)
 }
 
