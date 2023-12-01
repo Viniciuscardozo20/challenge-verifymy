@@ -16,7 +16,7 @@ type handler struct {
 }
 
 // SetUserRoutes creates user routes
-func (h *handler) SetUserRoutes(ctx context.Context, app *fiber.App, service ports.UserService) {
+func (h *handler) SetUserRoutes(app *fiber.App) {
 	app.Get("/api/v1/:id", h.read)
 	app.Get("/api/v1/", h.readAll)
 	app.Post("/api/v1/", h.create)
