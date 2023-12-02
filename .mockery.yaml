@@ -1,0 +1,13 @@
+with-expecter: true
+dir: "{{.InterfaceDir}}/testutil"
+filename: "mock_{{.InterfaceName}}.go"
+packages:
+  challenge-verifymy/core/ports:
+    interfaces:
+      Database:
+        output: mock_Database.go
+      UserRepository:
+        output: mock_UserRepository.go
+      UserService:
+        output: mock_UserService.go  
+
