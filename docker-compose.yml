@@ -9,18 +9,14 @@ services:
       - MONGO_INITDB_DATABASE=$MONGO_DB
       - MONGO_INITDB_ROOT_USERNAME=$MONGO_USER
       - MONGO_INITDB_ROOT_PASSWORD=$MONGO_PASSWORD
-  # api:
-  #   image: go-user-api
-  #   container_name: go-user-api
-  #   build:
-  #     context: .
-  #     dockerfile: build/docker/Dockerfile
-  #   environment:
-  #     - env=$ENV
-  #     - p=$CONTAINER_PORT
-  #     - db=mongo
-  #     - dsn=$MONGO_DSN
-  #   depends_on:
-  #     - mongo
-  #   ports:
-  #     - $HOST_PORT_MONGOAPI:$CONTAINER_PORT
+  api:
+    image: challenge-verifymy
+    container_name: challenge-verifymy
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - mongo
+    ports:
+      - "8082:8082"
+    command: ["sh", "-c", "sleep 20 && ./main"]
