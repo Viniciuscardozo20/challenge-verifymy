@@ -12,7 +12,7 @@ import (
 )
 
 type UserReq struct {
-	ID       string `json:"-"`
+	ID       string `json:"id" bson:"_id,omitempty" validate:"required"`
 	Name     string `json:"name" validate:"required"`
 	Age      int    `json:"age" validate:"required"`
 	Email    string `json:"email" validate:"required,email"`
@@ -21,12 +21,12 @@ type UserReq struct {
 }
 
 type UserRes struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	Age      int    `json:"age"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Address  string `json:"address"`
+	ID       string `json:"id" bson:"_id,omitempty"`
+	Name     string `json:"name" bson:"name"`
+	Age      int    `json:"age" bson:"age"`
+	Email    string `json:"email" bson:"email"`
+	Password string `json:"password" bson:"password"`
+	Address  string `json:"address" bson:"address"`
 }
 
 // Validate check if all fields are valid.

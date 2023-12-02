@@ -46,6 +46,17 @@ func (c *Client) disconnect(ctx context.Context) {
 
 // GetRepository retrieves a MongoDB collection as a Repository given its name.
 func (c *Client) GetRepository(name string) ports.UserRepository {
+	// coll := c.db.Collection(name)
+	// indexModel := mongo.IndexModel{
+	// 	Keys:    bson.M{"email": 1},
+	// 	Options: options.Index().SetUnique(true),
+	// }
+
+	// _, err = coll.Indexes().CreateOne(ctx, indexModel)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
 	return &Repository{
 		coll: c.db.Collection(name),
 	}
