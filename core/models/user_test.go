@@ -14,6 +14,7 @@ import (
 func TestValidateRequest(t *testing.T) {
 	t.Run("Validate with success", func(t *testing.T) {
 		userReq := &UserReq{
+			ID:       "1234",
 			Name:     "DummyName",
 			Age:      10,
 			Email:    "dummy@email.com",
@@ -27,6 +28,7 @@ func TestValidateRequest(t *testing.T) {
 
 	t.Run("Validate with missing field", func(t *testing.T) {
 		userReq := &UserReq{
+			ID:       "1234",
 			Name:     "",
 			Age:      10,
 			Email:    "dummy@email.com",
@@ -44,6 +46,7 @@ func TestValidateRequest(t *testing.T) {
 
 	t.Run("Validate with wrong field", func(t *testing.T) {
 		userReq := &UserReq{
+			ID:       "1234",
 			Name:     "DummyName",
 			Age:      10,
 			Email:    "dummemail.com",
@@ -70,6 +73,7 @@ func TestDecodeUserRequest(t *testing.T) {
 
 	t.Run("decode with success", func(t *testing.T) {
 		userReq := &UserReq{
+			ID:       "1234",
 			Name:     "DummyName",
 			Age:      10,
 			Email:    "dummy@email.com",

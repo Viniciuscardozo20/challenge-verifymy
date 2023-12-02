@@ -12,22 +12,31 @@ import (
 
 type handler struct {
 	service ports.UserService
-	ctx     context.Context
 }
 
 // SetUserRoutes creates user routes
-func (h *handler) SetUserRoutes(app *fiber.App) {
-	app.Get("/api/v1/:id", h.read)
-	app.Get("/api/v1/", h.readAll)
-	app.Post("/api/v1/", h.create)
-	app.Put("/api/v1/:id", h.update)
-	app.Delete("/api/v1/:id", h.delete)
+func (h *handler) SetUserRoutes(ctx context.Context, app *fiber.App) {
+	app.Get("/api/v1/:id", func(c *fiber.Ctx) error {
+		return h.read(c, ctx)
+	})
+	app.Get("/api/v1/", func(c *fiber.Ctx) error {
+		return h.readAll(c, ctx)
+	})
+	app.Post("/api/v1/", func(c *fiber.Ctx) error {
+		return h.create(c, ctx)
+	})
+	app.Put("/api/v1/:id", func(c *fiber.Ctx) error {
+		return h.update(c, ctx)
+	})
+	app.Delete("/api/v1/:id", func(c *fiber.Ctx) error {
+		return h.delete(c, ctx)
+	})
 }
 
-func (h *handler) read(c *fiber.Ctx) error {
+func (h *handler) read(c *fiber.Ctx, ctx context.Context) error {
 	id := c.Params("id")
 
-	userRes, err := h.service.Read(h.ctx, id)
+	userRes, err := h.service.Read(ctx, id)
 	if err != nil {
 		if errors.Is(err, customerr.ErrFailedToFindDocument) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "cannot find a user with that Id"})
@@ -39,8 +48,8 @@ func (h *handler) read(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "data": fiber.Map{"user": userRes}})
 }
 
-func (h *handler) readAll(c *fiber.Ctx) error {
-	users, err := h.service.ReadAll(h.ctx)
+func (h *handler) readAll(c *fiber.Ctx, ctx context.Context) error {
+	users, err := h.service.ReadAll(ctx)
 	if err != nil {
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": err.Error()})
 	}
@@ -48,7 +57,7 @@ func (h *handler) readAll(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "success", "users": users})
 }
 
-func (h *handler) create(c *fiber.Ctx) error {
+func (h *handler) create(c *fiber.Ctx, ctx context.Context) error {
 	var userReq *models.UserReq
 
 	if err := c.BodyParser(&userReq); err != nil {
@@ -59,9 +68,9 @@ func (h *handler) create(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(err)
 	}
 
-	if err := h.service.Create(h.ctx, userReq); err != nil {
+	if err := h.service.Create(ctx, userReq); err != nil {
 		if errors.Is(err, customerr.ErrFailedToInsertDocument) {
-			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "failed to create a user"})
+			return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": "failed to create a user"})
 		}
 
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": err.Error()})
@@ -70,7 +79,7 @@ func (h *handler) create(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "created"})
 }
 
-func (h *handler) update(c *fiber.Ctx) error {
+func (h *handler) update(c *fiber.Ctx, ctx context.Context) error {
 	id := c.Params("id")
 
 	var userReq *models.UserReq
@@ -83,7 +92,7 @@ func (h *handler) update(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(err)
 	}
 
-	userRes, err := h.service.Update(h.ctx, id, userReq)
+	userRes, err := h.service.Update(ctx, id, userReq)
 	if err != nil {
 		if errors.Is(err, customerr.ErrFailedToUpdateDocument) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "failed to update a user"})
@@ -95,10 +104,10 @@ func (h *handler) update(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"note": userRes}})
 }
 
-func (h *handler) delete(c *fiber.Ctx) error {
+func (h *handler) delete(c *fiber.Ctx, ctx context.Context) error {
 	id := c.Params("id")
 
-	err := h.service.Delete(h.ctx, id)
+	err := h.service.Delete(ctx, id)
 	if err != nil {
 		if errors.Is(err, customerr.ErrFailedToFindDocument) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "cannot find a user with that Id"})
@@ -112,7 +121,6 @@ func (h *handler) delete(c *fiber.Ctx) error {
 
 func NewUserHandler(ctx context.Context, service ports.UserService) *handler {
 	return &handler{
-		ctx:     ctx,
 		service: service,
 	}
 }

@@ -55,7 +55,7 @@ func (a *Api) Run(ctx context.Context, cancel context.CancelFunc) func() error {
 
 		userHandler := handlers.NewUserHandler(ctx, a.service)
 
-		userHandler.SetUserRoutes(app)
+		userHandler.SetUserRoutes(ctx, app)
 
 		log.Printf("Listening on addres and port %s", a.config.Api)
 
