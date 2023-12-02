@@ -2,10 +2,11 @@ package models
 
 import (
 	"bytes"
-	"challenge-verifymy/customerr"
 	"encoding/json"
 	"io"
 	"testing"
+
+	"challenge-verifymy/customerror"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/stretchr/testify/assert"
@@ -68,7 +69,7 @@ func TestDecodeUserRequest(t *testing.T) {
 
 	t.Run("decode with empty body", func(t *testing.T) {
 		err := userReq.Decode(nil)
-		assert.Error(t, err, customerr.ErrMissingBody)
+		assert.Error(t, err, customerror.ErrMissingBody)
 	})
 
 	t.Run("decode with success", func(t *testing.T) {

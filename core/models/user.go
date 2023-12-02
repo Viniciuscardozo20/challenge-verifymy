@@ -1,11 +1,12 @@
 package models
 
 import (
-	"challenge-verifymy/customerr"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+
+	"challenge-verifymy/customerror"
 
 	"github.com/go-playground/validator/v10"
 	log "github.com/sirupsen/logrus"
@@ -37,7 +38,7 @@ func (u *UserReq) Validate() error {
 // Decode unmarshal User request data.
 func (u *UserReq) Decode(body io.ReadCloser) error {
 	if body == http.NoBody || body == nil {
-		return customerr.ErrMissingBody
+		return customerror.ErrMissingBody
 	}
 
 	defer func(body io.ReadCloser) {

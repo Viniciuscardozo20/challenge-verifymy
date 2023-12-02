@@ -1,9 +1,10 @@
 package mongodb
 
 import (
-	"challenge-verifymy/customerr"
+	"challenge-verifymy/customerror"
 	"context"
 	"errors"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -16,10 +17,15 @@ type Repository struct {
 }
 
 // Save inserts a single document into the repository.
-func (r *Repository) Save(ctx context.Context, data any) error {
-	_, err := r.coll.InsertOne(ctx, data)
+func (r *Repository) Save(ctx context.Context, data, output any) error {
+	result, err := r.coll.InsertOne(ctx, data)
 	if err != nil {
-		return errors.Join(err, customerr.ErrFailedToInsertDocument)
+		return errors.Join(err, customerror.ErrFailedToInsertDocument)
+	}
+
+	err = r.Read(ctx, fmt.Sprintf("%v", result.InsertedID), output)
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -32,14 +38,14 @@ func (r *Repository) Read(ctx context.Context, id string, output any) error {
 	found := r.coll.FindOne(ctx, filter)
 	if found.Err() != nil {
 		if errors.Is(found.Err(), mongo.ErrNoDocuments) {
-			return customerr.ErrNoResult
+			return customerror.ErrNoResult
 		}
 
-		return errors.Join(found.Err(), customerr.ErrFailedToFindDocument)
+		return errors.Join(found.Err(), customerror.ErrFailedToFindDocument)
 	}
 
 	if err := found.Decode(output); err != nil {
-		return errors.Join(err, customerr.ErrFailedToUnmarshalDocument)
+		return errors.Join(err, customerror.ErrFailedToUnmarshalDocument)
 	}
 
 	return nil
@@ -52,14 +58,14 @@ func (r *Repository) ReadAll(ctx context.Context, output any) error {
 	cursor, err := r.coll.Find(ctx, bson.D{}, findOptions)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			return customerr.ErrNoResult
+			return customerror.ErrNoResult
 		}
 
-		return errors.Join(err, customerr.ErrFailedToFindDocument)
+		return errors.Join(err, customerror.ErrFailedToFindDocument)
 	}
 
 	if err = cursor.All(ctx, output); err != nil {
-		return errors.Join(err, customerr.ErrFailedToUnmarshalDocument)
+		return errors.Join(err, customerror.ErrFailedToUnmarshalDocument)
 	}
 
 	return nil
@@ -89,10 +95,10 @@ func (r *Repository) Delete(ctx context.Context, id string) error {
 	_, err := r.coll.DeleteOne(ctx, filter)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			return customerr.ErrNoResult
+			return customerror.ErrNoResult
 		}
 
-		return errors.Join(err, customerr.ErrFailedToFindDocument)
+		return errors.Join(err, customerror.ErrFailedToFindDocument)
 	}
 
 	return err

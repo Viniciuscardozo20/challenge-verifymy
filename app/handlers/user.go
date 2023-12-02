@@ -1,11 +1,12 @@
 package handlers
 
 import (
-	"challenge-verifymy/core/models"
-	"challenge-verifymy/core/ports"
-	"challenge-verifymy/customerr"
 	"context"
 	"errors"
+
+	"challenge-verifymy/core/models"
+	"challenge-verifymy/core/ports"
+	"challenge-verifymy/customerror"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -38,7 +39,7 @@ func (h *handler) read(c *fiber.Ctx, ctx context.Context) error {
 
 	userRes, err := h.service.Read(ctx, id)
 	if err != nil {
-		if errors.Is(err, customerr.ErrFailedToFindDocument) {
+		if errors.Is(err, customerror.ErrFailedToFindDocument) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "cannot find a user with that Id"})
 		}
 
@@ -68,15 +69,16 @@ func (h *handler) create(c *fiber.Ctx, ctx context.Context) error {
 		return c.Status(fiber.StatusBadRequest).JSON(err)
 	}
 
-	if err := h.service.Create(ctx, userReq); err != nil {
-		if errors.Is(err, customerr.ErrFailedToInsertDocument) {
+	user, err := h.service.Create(ctx, userReq)
+	if err != nil {
+		if errors.Is(err, customerror.ErrFailedToInsertDocument) {
 			return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": "failed to create a user"})
 		}
 
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": err.Error()})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "created"})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"user": user}})
 }
 
 func (h *handler) update(c *fiber.Ctx, ctx context.Context) error {
@@ -94,7 +96,7 @@ func (h *handler) update(c *fiber.Ctx, ctx context.Context) error {
 
 	userRes, err := h.service.Update(ctx, id, userReq)
 	if err != nil {
-		if errors.Is(err, customerr.ErrFailedToUpdateDocument) {
+		if errors.Is(err, customerror.ErrFailedToUpdateDocument) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "failed to update a user"})
 		}
 
@@ -109,7 +111,7 @@ func (h *handler) delete(c *fiber.Ctx, ctx context.Context) error {
 
 	err := h.service.Delete(ctx, id)
 	if err != nil {
-		if errors.Is(err, customerr.ErrFailedToFindDocument) {
+		if errors.Is(err, customerror.ErrFailedToFindDocument) {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"status": "fail", "message": "cannot find a user with that Id"})
 		}
 

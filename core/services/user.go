@@ -10,8 +10,14 @@ type UserService struct {
 	repository ports.UserRepository
 }
 
-func (u *UserService) Create(ctx context.Context, user *models.UserReq) error {
-	return u.repository.Save(ctx, user)
+func (u *UserService) Create(ctx context.Context, user *models.UserReq) (res *models.UserRes, err error) {
+	res = &models.UserRes{}
+
+	if err = u.repository.Save(ctx, user, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
 }
 
 func (u *UserService) Read(ctx context.Context, ID string) (res *models.UserRes, err error) {
