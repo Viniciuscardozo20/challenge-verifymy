@@ -12,4 +12,5 @@ var (
 	ErrFailedToUnmarshalDocument = errors.New("failed to unmarshal document")
 	ErrNoResult                  = errors.New("no result found")
 	ErrMissingBody               = errors.New("body is required")
+	ErrUserAlreadyExists         = errors.New("user already exists")
 )

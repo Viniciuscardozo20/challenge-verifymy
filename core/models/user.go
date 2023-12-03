@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	log "github.com/sirupsen/logrus"
+	"github.com/viant/toolbox/format"
 )
 
 type UserReq struct {
@@ -50,6 +51,25 @@ func (u *UserReq) Decode(body io.ReadCloser) error {
 
 	if err := json.NewDecoder(body).Decode(u); err != nil {
 		return fmt.Errorf("failed to decode a user request: %w", err)
+	}
+
+	return nil
+}
+
+func (*UserReq) CheckFieldErrors(err error) map[string]string {
+	if fieldErrors, ok := err.(validator.ValidationErrors); ok {
+
+		messages := make(map[string]string)
+
+		for _, fieldError := range fieldErrors {
+			if _, ok = messages[fieldError.Field()]; !ok {
+				field := format.CaseUpperCamel.Format(fieldError.Field(), format.CaseLowerUnderscore)
+
+				messages[field] = fmt.Sprintf("%s is missing or invalid", field)
+			}
+		}
+
+		return messages
 	}
 
 	return nil

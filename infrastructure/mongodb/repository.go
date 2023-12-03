@@ -20,6 +20,9 @@ type Repository struct {
 func (r *Repository) Save(ctx context.Context, data, output any) error {
 	result, err := r.coll.InsertOne(ctx, data)
 	if err != nil {
+		if mongo.IsDuplicateKeyError(err) {
+			return customerror.ErrUserAlreadyExists
+		}
 		return errors.Join(err, customerror.ErrFailedToInsertDocument)
 	}
 
@@ -41,7 +44,7 @@ func (r *Repository) Read(ctx context.Context, id string, output any) error {
 	found := r.coll.FindOne(ctx, filter)
 	if found.Err() != nil {
 		if errors.Is(found.Err(), mongo.ErrNoDocuments) {
-			return customerror.ErrNoResult
+			return customerror.ErrFailedToFindDocument
 		}
 
 		return errors.Join(found.Err(), customerror.ErrFailedToFindDocument)
