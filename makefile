@@ -6,7 +6,7 @@ up:
 	docker-compose up -d --build
 down:
 	docker-compose down
-test-unit:
+test:
 	go test -race $(shell go list ./...) -coverprofile=coverage.out
 cover:
 	go tool cover -html=coverage.out

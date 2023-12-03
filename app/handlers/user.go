@@ -103,7 +103,7 @@ func (h *handler) update(c *fiber.Ctx, ctx context.Context) error {
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "fail", "message": err.Error()})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"note": userRes}})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"user": userRes}})
 }
 
 func (h *handler) delete(c *fiber.Ctx, ctx context.Context) error {
