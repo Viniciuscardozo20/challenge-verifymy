@@ -13,7 +13,7 @@ import (
 )
 
 type UserReq struct {
-	ID       string `json:"id" bson:"_id,omitempty" validate:"required"`
+	ID       string `json:"-"`
 	Name     string `json:"name" validate:"required"`
 	Age      int    `json:"age" validate:"required"`
 	Email    string `json:"email" validate:"required,email"`

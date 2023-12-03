@@ -10,7 +10,7 @@ import (
 	"challenge-verifymy/infrastructure/mongodb"
 
 	"github.com/gofiber/fiber/v2"
-	log "github.com/sirupsen/logrus"
+	"github.com/gofiber/fiber/v2/log"
 )
 
 type Api struct {
@@ -57,7 +57,7 @@ func (a *Api) Run(ctx context.Context, cancel context.CancelFunc) func() error {
 
 		userHandler.SetUserRoutes(ctx, app)
 
-		log.Printf("Listening on addres and port %s", a.config.Api)
+		log.Infof("Listening on address and port: %s", a.config.Api)
 
 		go a.shutdown(ctx, app)
 
@@ -67,7 +67,9 @@ func (a *Api) Run(ctx context.Context, cancel context.CancelFunc) func() error {
 
 func (a *Api) shutdown(ctx context.Context, app *fiber.App) {
 	<-ctx.Done()
-	log.Printf("Shutting down API gracefully...")
-	app.Shutdown()
+	log.Infof("Shutting down API gracefully...")
+	if err := app.Shutdown(); err != nil {
+		log.Infof("Error shutting down API: %v", err)
+	}
 	a.Shutdown()
 }

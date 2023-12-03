@@ -4,9 +4,9 @@ import (
 	"challenge-verifymy/customerror"
 	"context"
 	"errors"
-	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -23,7 +23,7 @@ func (r *Repository) Save(ctx context.Context, data, output any) error {
 		return errors.Join(err, customerror.ErrFailedToInsertDocument)
 	}
 
-	err = r.Read(ctx, fmt.Sprintf("%v", result.InsertedID), output)
+	err = r.Read(ctx, result.InsertedID.(primitive.ObjectID).Hex(), output)
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,10 @@ func (r *Repository) Save(ctx context.Context, data, output any) error {
 
 // Read retrieves a single document from the repository based on the given id.
 func (r *Repository) Read(ctx context.Context, id string, output any) error {
-	filter := bson.M{"_id": id}
+	filter, err := buildFilterByID(id)
+	if err != nil {
+		return err
+	}
 
 	found := r.coll.FindOne(ctx, filter)
 	if found.Err() != nil {
@@ -73,9 +76,12 @@ func (r *Repository) ReadAll(ctx context.Context, output any) error {
 
 // Update changes from a single document into the repository.
 func (r *Repository) Update(ctx context.Context, id string, data, output any) error {
-	filter := bson.M{"_id": id}
+	filter, err := buildFilterByID(id)
+	if err != nil {
+		return err
+	}
 
-	_, err := r.coll.UpdateOne(ctx, filter, bson.M{"$set": data})
+	_, err = r.coll.UpdateOne(ctx, filter, bson.M{"$set": data})
 	if err != nil {
 		return err
 	}
@@ -90,9 +96,12 @@ func (r *Repository) Update(ctx context.Context, id string, data, output any) er
 
 // Delete remove a single document into the repository.
 func (r *Repository) Delete(ctx context.Context, id string) error {
-	filter := bson.M{"_id": id}
+	filter, err := buildFilterByID(id)
+	if err != nil {
+		return err
+	}
 
-	_, err := r.coll.DeleteOne(ctx, filter)
+	_, err = r.coll.DeleteOne(ctx, filter)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return customerror.ErrNoResult
@@ -102,4 +111,13 @@ func (r *Repository) Delete(ctx context.Context, id string) error {
 	}
 
 	return err
+}
+
+func buildFilterByID(id string) (bson.M, error) {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return bson.M{"_id": objectID}, nil
 }

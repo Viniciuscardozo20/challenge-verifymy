@@ -3,9 +3,10 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	DBURI  string `mapstructure:"MONGO_URI"`
-	Api    string `mapstructure:"API"`
-	DBName string `mapstructure:"MONGO_DB"`
+	DBURI    string `mapstructure:"MONGO_URI"`
+	Api      string `mapstructure:"API"`
+	DBName   string `mapstructure:"MONGO_DB"`
+	LogLevel string `mapstructure:"LOG_LEVEL"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
