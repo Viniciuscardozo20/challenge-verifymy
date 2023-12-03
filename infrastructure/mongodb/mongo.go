@@ -8,6 +8,7 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -45,10 +46,20 @@ func (c *Client) disconnect(ctx context.Context) {
 }
 
 // GetRepository retrieves a MongoDB collection as a Repository given its name.
-func (c *Client) GetRepository(name string) ports.UserRepository {
-	return &Repository{
-		coll: c.db.Collection(name),
+func (c *Client) GetRepository(ctx context.Context, name string) (ports.UserRepository, error) {
+	repo := &Repository{coll: c.db.Collection(name)}
+
+	index := mongo.IndexModel{
+		Keys:    bson.M{"email": 1},
+		Options: options.Index().SetUnique(true),
 	}
+
+	_, err := repo.coll.Indexes().CreateOne(ctx, index)
+	if err != nil {
+		return nil, err
+	}
+
+	return repo, nil
 }
 
 // New initializes and returns a new MongoDB Client instance by connecting to the provided URI. It also ensures a successful connection by

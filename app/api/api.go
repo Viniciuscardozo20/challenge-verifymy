@@ -19,7 +19,7 @@ type Api struct {
 	Shutdown func()
 }
 
-const userRepository = "user"
+const collName = "user"
 
 // New creates a new API
 func New(ctx context.Context, cfg config.Config) (ap *Api, err error) {
@@ -30,7 +30,7 @@ func New(ctx context.Context, cfg config.Config) (ap *Api, err error) {
 		return nil, err
 	}
 
-	userRepo := db.GetRepository(userRepository)
+	userRepo, err := db.GetRepository(ctx, collName)
 	if err != nil {
 		return nil, err
 	}

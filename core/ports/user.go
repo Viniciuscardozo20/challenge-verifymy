@@ -7,7 +7,7 @@ import (
 
 type Database interface {
 	Disconnected() <-chan struct{}
-	GetRepository(name string) UserRepository
+	GetRepository(ctx context.Context, name string) (UserRepository, error)
 }
 
 type UserRepository interface {
