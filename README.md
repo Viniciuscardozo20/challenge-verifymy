@@ -30,7 +30,7 @@ Method: `POST`
 
 In the terminal, execute:
 
-    curl -XPOST -H "Content-type: application/json" 
+    curl -XPOST -H "Content-type: application/json" \
     -d '{
       "id": "1",
       "name": "Vinicius",
@@ -38,7 +38,7 @@ In the terminal, execute:
       "email": "vinicius@email.com",
       "password": "1234",
       "address": "street 01"
-    }' 'http://localhost:8082/api/v1/user/''
+    }' 'http://localhost:8082/api/v1/user/'
 
 Or, in any other interface of your choice, such as Postman or Insomnia.
 
@@ -86,7 +86,7 @@ Method: `GET`
 
 In the terminal, execute:
 
-    curl -XGET -H 'http://localhost:8082/api/v1/user/:id'
+    curl -XGET 'http://localhost:8082/api/v1/user/:id'
 
 Or, in any other interface of your choice, such as Postman or Insomnia.
 
@@ -119,7 +119,7 @@ Method: `GET`
 
 In the terminal, execute:
 
-    curl -XGET -H 'http://localhost:8082/api/v1/user/'
+    curl -XGET 'http://localhost:8082/api/v1/user/'
 
 Or, in any other interface of your choice, such as Postman or Insomnia.
 
@@ -156,7 +156,7 @@ Method: `PUT`
 
 In the terminal, execute:
 
-    curl -XPUT -H "Content-type: application/json" 
+    curl -XPUT -H "Content-type: application/json" \
     -d '{
       "id": "1",
       "name": "Vinicius",
@@ -164,7 +164,7 @@ In the terminal, execute:
       "email": "vinicius@email.com",
       "password": "1234",
       "address": "street 01"
-    }' 'http://localhost:8082/api/v1/user/:id''
+    }' 'http://localhost:8082/api/v1/user/1'
 
 Or, in any other interface of your choice, such as Postman or Insomnia.
 
@@ -212,7 +212,7 @@ Method: `DELETE`
 
 In the terminal, execute:
 
-    curl -XDELETE -H 'http://localhost:8082/v1/:id''
+    curl -XDELETE 'http://localhost:8082/api/v1/user/1'
 
 Or, in any other interface of your choice, such as Postman or Insomnia.
 
@@ -234,14 +234,15 @@ make test
 The expected output will be:
 
     
-    go test -race challenge-verifymy/app/api challenge-verifymy/app/handlers challenge-verifymy/cmd challenge-verifymy/config challenge-verifymy/core/models challenge-verifymy/core/ports challenge-verifymy/core/ports/testutil challenge-verifymy/core/services challenge-verifymy/customerror challenge-verifymy/infrastructure/mongodb -coverprofile=coverage.out
+    go test -race challenge-verifymy/app/api challenge-verifymy/app/handlers challenge-verifymy/cmd challenge-verifymy/common challenge-verifymy/config challenge-verifymy/core/models challenge-verifymy/core/ports challenge-verifymy/core/ports/testutil challenge-verifymy/core/services challenge-verifymy/customerror challenge-verifymy/infrastructure/mongodb -coverprofile=coverage.out
     ?       challenge-verifymy/app/api      [no test files]
-    ?       challenge-verifymy/app/handlers [no test files]
     ?       challenge-verifymy/cmd  [no test files]
+    ?       challenge-verifymy/common       [no test files]
     ?       challenge-verifymy/config       [no test files]
     ?       challenge-verifymy/core/ports   [no test files]
     ?       challenge-verifymy/core/ports/testutil  [no test files]
+    ok      challenge-verifymy/app/handlers 0.092s  coverage: 78.8% of statements
+    ok      challenge-verifymy/core/models  0.058s  coverage: 50.0% of statements
     ?       challenge-verifymy/customerror  [no test files]
     ?       challenge-verifymy/infrastructure/mongodb       [no test files]
-    ok      challenge-verifymy/core/models  0.032s  coverage: 90.0% of statements
-    ok      challenge-verifymy/core/services        0.055s  coverage: 27.8% of statements
+    ok      challenge-verifymy/core/services        0.055s  coverage: 100.0% of statements

@@ -57,7 +57,7 @@ func (a *Api) Run(ctx context.Context, cancel context.CancelFunc) func() error {
 
 		userHandler.SetUserRoutes(ctx, app)
 
-		log.Infof("Listening on address and port: %s", a.config.Api)
+		log.Info("Listening on address and port")
 
 		go a.shutdown(ctx, app)
 
