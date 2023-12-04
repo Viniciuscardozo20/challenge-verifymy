@@ -32,7 +32,6 @@ In the terminal, execute:
 
     curl -XPOST -H "Content-type: application/json" \
     -d '{
-      "id": "1",
       "name": "Vinicius",
       "age": 27,
       "email": "vinicius@email.com",
@@ -45,7 +44,6 @@ Or, in any other interface of your choice, such as Postman or Insomnia.
 **Body** (application/json):
 
     {
-	    "id": "1",
       "name": "Vinicius",
       "age": 27,
       "email": "vinicius@email.com",
@@ -61,7 +59,7 @@ _HTTP Status_: `201 Created`
     "status": "success",
     "data": {
         "user": {
-            "id": "1",
+            "id": "656d2023f9f106023340ebeb",
             "name": "Vinicius",
             "age": 27,
             "email": "vinicius@email.com",
@@ -98,7 +96,7 @@ _HTTP Status_: `200 OK`
     "status": "success",
     "data": {
         "user": {
-            "id": "1",
+            "id": "656d2023f9f106023340ebeb",
             "name": "Vinicius",
             "age": 27,
             "email": "vinicius@email.com",
@@ -131,7 +129,7 @@ _HTTP Status_: `200 OK`
     "status": "success",
     "users": [
         {
-          "id": "1",
+          "id": "656d2023f9f106023340ebeb",
           "name": "Vinicius",
           "age": 27,
           "email": "vinicius@email.com",
@@ -158,7 +156,6 @@ In the terminal, execute:
 
     curl -XPUT -H "Content-type: application/json" \
     -d '{
-      "id": "1",
       "name": "Vinicius",
       "age": 27,
       "email": "vinicius@email.com",
@@ -171,7 +168,6 @@ Or, in any other interface of your choice, such as Postman or Insomnia.
 **Body** (application/json):
 
     {
-	    "id": "1",
       "name": "Vinicius",
       "age": 27,
       "email": "vinicius@email.com",
@@ -187,7 +183,7 @@ _HTTP Status_: `201 Created`
     "status": "success",
     "data": {
         "user": {
-            "id": "1",
+            "id": "656d2023f9f106023340ebeb",
             "name": "Vinicius",
             "age": 27,
             "email": "vinicius@email.com",
