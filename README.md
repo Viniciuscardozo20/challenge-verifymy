@@ -16,7 +16,7 @@ After cloning the repository, to run the project, execute the following command:
 make up
 ```
 
-By default, the API runs on port `8082`, and the database on port `27017`. However, these variables can be changed in the `.env` file.
+By default, the API runs on `localhost` and port `8082`, and the database on port `27017`. However, these variables can be changed in the `.env` file.
 
 ## User Routes
 
@@ -164,7 +164,7 @@ In the terminal, execute:
       "email": "vinicius@email.com",
       "password": "1234",
       "address": "street 01"
-    }' 'http://localhost:8082/api/v1/user/1'
+    }' 'http://localhost:8082/api/v1/user/:id'
 
 Or, in any other interface of your choice, such as Postman or Insomnia.
 
@@ -212,7 +212,7 @@ Method: `DELETE`
 
 In the terminal, execute:
 
-    curl -XDELETE 'http://localhost:8082/api/v1/user/1'
+    curl -XDELETE 'http://localhost:8082/api/v1/user/:id'
 
 Or, in any other interface of your choice, such as Postman or Insomnia.
 
