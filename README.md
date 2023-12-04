@@ -24,7 +24,7 @@ By default, the API runs on port `8082`, and the database on port `27017`. Howev
 
 Method: `POST`
 
-    /api/v1/
+    /api/v1/user/
     
 #### Example
 
@@ -38,7 +38,7 @@ In the terminal, execute:
       "email": "vinicius@email.com",
       "password": "1234",
       "address": "street 01"
-    }' 'http://localhost:8082/api/v1/''
+    }' 'http://localhost:8082/api/v1/user/''
 
 Or, in any other interface of your choice, such as Postman or Insomnia.
 
@@ -76,7 +76,7 @@ _HTTP Status_: `201 Created`
 
 Method: `GET`
 
-    /api/v1/:id
+    /api/v1/user/:id
 
 **Parameters**: 
 
@@ -86,7 +86,7 @@ Method: `GET`
 
 In the terminal, execute:
 
-    curl -XGET -H 'http://localhost:8082/api/v1/:id'
+    curl -XGET -H 'http://localhost:8082/api/v1/user/:id'
 
 Or, in any other interface of your choice, such as Postman or Insomnia.
 
@@ -113,13 +113,13 @@ _HTTP Status_: `200 OK`
 
 Method: `GET`
 
-    /api/v1/
+    /api/v1/user/
 
 #### Example
 
 In the terminal, execute:
 
-    curl -XGET -H 'http://localhost:8082/api/v1/'
+    curl -XGET -H 'http://localhost:8082/api/v1/user/'
 
 Or, in any other interface of your choice, such as Postman or Insomnia.
 
@@ -146,7 +146,7 @@ _HTTP Status_: `200 OK`
 
 Method: `PUT`
 
-    /api/v1/:id
+    /api/v1/user/:id
 
 **Parameters**: 
 
@@ -164,7 +164,7 @@ In the terminal, execute:
       "email": "vinicius@email.com",
       "password": "1234",
       "address": "street 01"
-    }' 'http://localhost:8082/api/v1/:id''
+    }' 'http://localhost:8082/api/v1/user/:id''
 
 Or, in any other interface of your choice, such as Postman or Insomnia.
 
